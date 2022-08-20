@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 // import logo from './logo.svg';
 import './App.css';
 import FAQ from './components/FAQ';
@@ -9,10 +9,12 @@ function App() {
       <h1>Welcome to React Router!</h1>
       {/* 路由表 */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="faq" element={<FAQ />}></Route>
-        <Route path="*" element={<NotFound />}></Route>
+        <Route path='/' element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="faq" element={<FAQ />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
+        </Route>
       </Routes>
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -48,6 +50,7 @@ function Home() {
 }
 
 function About() {
+  let navigate = useNavigate();
   return (
     <>
       <main>
@@ -59,6 +62,9 @@ function About() {
       </main>
       <nav>
         <Link to="/">Home</Link>
+        <input type="button" value="return home" onClick={(e)=> {
+          navigate('/');
+        }} />
       </nav>
     </>
   );
@@ -79,6 +85,18 @@ function NotFound() {
       <h2>不存在網址</h2>
       <Link to="/">回到首頁</Link>
     </>
+  );
+}
+
+function Layout() {
+  return (
+    <div>
+      <div className='header'>表頭</div>
+      <main>
+        <Outlet></Outlet>
+      </main>
+      <div className='footer'>表尾</div>
+    </div>
   );
 }
 
