@@ -2,6 +2,9 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 // import logo from './logo.svg';
 import './App.css';
 import FAQ from './components/FAQ';
+import Tour from './components/Tour';
+import TourList from './components/TourList';
+import TourDetail from './components/TourDetail';
 
 function App() {
   return (
@@ -11,8 +14,13 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="faq" element={<FAQ />}></Route>
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />}></Route>
+          <Route path="/tour" element={<Tour />}>
+            <Route index element={<TourList />}></Route> {/* index為預設路由 */}
+            <Route path="sayhello" element={<SayHello />}></Route>
+            <Route path=":Id" element={<TourDetail />}></Route>
+          </Route>
           <Route path="*" element={<NotFound />}></Route>
         </Route>
       </Routes>
@@ -79,6 +87,15 @@ function About() {
 //   );
 // }
 
+function SayHello() {
+  return (
+    <>
+      <h2>Hi~~~~</h2>
+      <Link to="/">return Home</Link>
+    </>
+  );
+}
+
 function NotFound() {
   return (
     <>
@@ -92,6 +109,17 @@ function Layout() {
   return (
     <div>
       <div className='header'>表頭</div>
+      <nav>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/faq">FAQ</Link>
+        </li>
+        <li>
+          <Link to="/tour">Tour</Link>
+        </li>
+      </nav>
       <main>
         <Outlet></Outlet>
       </main>
