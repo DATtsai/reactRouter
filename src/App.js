@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 // import logo from './logo.svg';
 import './App.css';
@@ -5,39 +6,39 @@ import FAQ from './components/FAQ';
 import Tour from './components/Tour';
 import TourList from './components/TourList';
 import TourDetail from './components/TourDetail';
+import SignUp from './components/SignUp';
+import Login from './components/Login';
+import Todo from './components/Todo';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthContext, useAuth } from "./components/Context";
+
 
 function App() {
+  const [token, setToken] = useState(null);
   return (
     <div className="App">
-      <h1>Welcome to React Router!</h1>
-      {/* 路由表 */}
-      <Routes>
-        <Route path='/' element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/faq" element={<FAQ />}></Route>
-          <Route path="/tour" element={<Tour />}>
-            <Route index element={<TourList />}></Route> {/* index為預設路由 */}
-            <Route path="sayhello" element={<SayHello />}></Route>
-            <Route path=":Id" element={<TourDetail />}></Route>
+      <AuthContext.Provider value={{token, setToken}}>
+        <h1>Welcome to React Router!</h1>
+        {/* 路由表 */}
+        <Routes>
+          <Route path='/' element={<Layout token={ token }/>}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<FAQ />}></Route>
+            <Route path="/tour" element={<Tour />}>
+              <Route index element={<TourList />}></Route> {/* index為預設路由 */}
+              <Route path="sayhello" element={<SayHello />}></Route>
+              <Route path=":Id" element={<TourDetail />}></Route>
+            </Route>
+            <Route path='/signup' element={<SignUp />}></Route>
+            <Route path='/login' element={<Login />}></Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path='/todo' element={<Todo />}></Route>
+            </Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Route>
-          <Route path="*" element={<NotFound />}></Route>
-        </Route>
-      </Routes>
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
+        </Routes>
+      </AuthContext.Provider>
     </div>
   );
 }
@@ -105,7 +106,7 @@ function NotFound() {
   );
 }
 
-function Layout() {
+function Layout({token}) {
   return (
     <div>
       <div className='header'>表頭</div>
@@ -118,6 +119,18 @@ function Layout() {
         </li>
         <li>
           <Link to="/tour">Tour</Link>
+        </li>
+        <li>
+          <Link to="/signup">signup</Link>
+        </li>
+        <li>
+          <Link to="/login">login</Link>
+        </li>
+        <li>
+          {
+            token &&
+            <Link to="/todo">todo</Link>
+          }
         </li>
       </nav>
       <main>
